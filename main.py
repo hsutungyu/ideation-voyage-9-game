@@ -130,11 +130,30 @@ class Game:
     def drawCurrencies(self):
         # buttons for showing the in-game currencies
         currencies = [str(account.currency[0]), str(account.currency[1])]
-        currencies_image = [
-            "assets/normal_currency.png", "assets/premium_currency.png"
+        # currencies_image = [
+        #     "assets/normal_currency.png", "assets/premium_currency.png"
+        # ]
+        # currencies_button_list = game.drawHorizontalButtonsWithTexts(
+        #     157, 30, 5, currencies_image, currencies)
+        self.drawButton(image=pygame.image.load("assets/normal_currency.png"),
+                        pos=(157, 30),
+                        text_input="",
+                        font=self.font)
+        normal_currency_button = self.drawButton(image=None,
+                                                 pos=(199, 30),
+                                                 text_input=currencies[0],
+                                                 font=self.font_small)
+        self.drawButton(image=pygame.image.load("assets/premium_currency.png"),
+                        pos=(245, 30),
+                        text_input="",
+                        font=self.font)
+        premium_currency_button = self.drawButton(image=None,
+                                                  pos=(287, 30),
+                                                  text_input=currencies[1],
+                                                  font=self.font_small)
+        currencies_button_list = [
+            normal_currency_button, premium_currency_button
         ]
-        currencies_button_list = game.drawHorizontalButtonsWithTexts(
-            157, 30, 5, currencies_image, currencies)
         return currencies_button_list
 
     # the main menu game loop
@@ -191,6 +210,9 @@ class Game:
                             pos=(283, 306),
                             text_input="rank",
                             font=self.font_small)
+            game.drawButton(image=None, pos=(50, 630), text_input="game", font=self.font_small, base_color=(255, 0, 0))
+            game.drawButton(image=None, pos=(156, 630), text_input="pay", font=self.font_small, base_color=(255, 0, 0))
+            game.drawButton(image=None, pos=(261, 630), text_input="gifts", font=self.font_small, base_color=(255, 0, 0))
             for event in pygame.event.get():
                 game.quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -206,6 +228,8 @@ class Game:
                         game.business()
                     if report_button.checkForInput(pos):
                         game.report()
+                    if leaderboard_button.checkForInput(pos):
+                        game.leaderboard()
             pygame.display.update()
 
     # the weekly progress game loop
@@ -224,13 +248,48 @@ class Game:
         for item in account.business_investments:
             if item.name == random_event.business:
                 item.current_price *= 1 + random_event.action
-        # 3) trigger a report showing the gain and loss of this week
+                item.current_price = round(item.current_price, 2)
+        # 2.1) show the random event
+        random_event_toggle = True
         while True:
-            self.screen.fill((255, 255, 255))
-            utility.blit_text(self.screen, business_list, (40, 40), self.font)
-            pygame.display.update()
+            if not random_event_toggle:
+                break
+            self.screen.fill((255, 255, 153))
+            self.drawButton(image=None,
+                            pos=(WIDTH // 2, HEIGHT // 2),
+                            text_input="Show the Details of Random Event",
+                            font=self.font_small)
+            continue_button = self.drawButton(image=None,
+                                              pos=(WIDTH // 2, 629),
+                                              text_input="Continue",
+                                              font=self.font_small)
             for event in pygame.event.get():
                 game.quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    if continue_button.checkForInput(pos):
+                        random_event_toggle = not random_event_toggle
+            pygame.display.update()
+
+        # 3) trigger a report showing the gain and loss of this week
+        while True:
+            self.screen.fill((255, 255, 153))
+            # utility.blit_text(self.screen, business_list, (40, 40), self.font)
+            self.drawButton(image=None,
+                            pos=(WIDTH // 2, HEIGHT // 2),
+                            text_input="Show the Weekly Report",
+                            font=self.font_small)
+            back_button = self.drawButton(image=None,
+                                          pos=(WIDTH // 2, 629),
+                                          text_input="Back",
+                                          font=self.font_small)
+            for event in pygame.event.get():
+                game.quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    if back_button.checkForInput(pos):
+                        game.main_menu()
+            pygame.display.update()
 
     # the household game loop
     def household(self):
@@ -276,9 +335,9 @@ class Game:
                                 text_input="cost of PC      ",
                                 font=self.font_very_small)
             back_button = self.drawButton(image=None,
-                                          pos=(150, 629),
+                                          pos=(WIDTH // 2, 629),
                                           text_input="Back",
-                                          font=self.font)
+                                          font=self.font_small)
             pygame.display.update()
             for event in pygame.event.get():
                 game.quit(event)
@@ -313,11 +372,14 @@ class Game:
                                                        font=self.font_small)
             if convenience_store_button_toggle:
                 self.drawButton(pygame.image.load(
-                    "assets/dialog_100h.png").convert_alpha(), pos=(163,180), text_input="buy 7-11?     ", font=self.font_very_small)
+                    "assets/dialog_100h.png").convert_alpha(),
+                                pos=(163, 180),
+                                text_input="buy 7-11?     ",
+                                font=self.font_very_small)
             back_button = self.drawButton(image=None,
-                                          pos=(150, 629),
+                                          pos=(WIDTH // 2, 629),
                                           text_input="Back",
-                                          font=self.font)
+                                          font=self.font_small)
             pygame.display.update()
             for event in pygame.event.get():
                 game.quit(event)
@@ -331,14 +393,45 @@ class Game:
     # the report game loop
     def report(self):
         while True:
-            self.screen.fill((0, 0, 0))
-            pygame.display.update()
+            self.screen.fill((204, 204, 255))
+            game.drawButton(image=None,
+                            pos=(155, 328),
+                            text_input="show the weekly report",
+                            font=self.font)
+            back_button = self.drawButton(image=None,
+                                          pos=(WIDTH // 2, 629),
+                                          text_input="Back",
+                                          font=self.font_small)
             for event in pygame.event.get():
                 game.quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    if back_button.checkForInput(pos):
+                        game.main_menu()
+            pygame.display.update()
 
+    # the leaderboard game loop
+    def leaderboard(self):
+        while True:
+            self.screen.fill((255, 153, 204))
+            game.drawButton(image=None,
+                            pos=(155, 328),
+                            text_input="show the leaderboard",
+                            font=self.font)
+            back_button = self.drawButton(image=None,
+                                          pos=(WIDTH // 2, 629),
+                                          text_input="Back",
+                                          font=self.font_small)
+            for event in pygame.event.get():
+                game.quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    if back_button.checkForInput(pos):
+                        game.main_menu()
+            pygame.display.update()
 
 if __name__ == "__main__":
-    account = Account(0, 0)
+    account = Account(500, 450)
     game = Game()
     # add some business investments
     # in the finished game, this will be handled autonomously by the children

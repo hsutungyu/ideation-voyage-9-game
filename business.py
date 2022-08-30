@@ -13,15 +13,15 @@ class Business:
     # return the new current price
     def setCurrentPrice(self):
         randomChange = round(
-            random.uniform(1 - self.risk_percentage, 1 + self.risk_percentage),
-            2)  # 2 decimal places
+            random.uniform(1 - self.risk_percentage,
+                           1 + self.risk_percentage), 2)  # 2 decimal places
         self.current_price *= randomChange
-        round(self.current_price, 2)
+        self.current_price = round(self.current_price, 2)
         return self.current_price
 
     # return the profit/loss ofthe investment
     def getPriceDifference(self):
-        return self.current_price - self.bid_price
+        return round(self.current_price - self.bid_price, 2)
 
     # return a space separated string of name, bid price, current price and profit/loss
     def __str__(self):
