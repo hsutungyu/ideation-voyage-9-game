@@ -46,6 +46,7 @@ class Game:
 
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("Kid's Pay Simulation Prototype")
         self.font = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 25)
         self.font_medium = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 20)
         self.font_small = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 15)
@@ -572,6 +573,31 @@ class Game:
 
     # gift portion of app
     def gift(self):
+        # draw
+        # position is the middle pixel of the picture of the gift
+        # the picture should have a height of 50px
+        def drawGiftIconPoint(position, picture_path, point):
+            """
+            draw a picture of the gift as well as the required point
+            with the middle of the picture at position
+            picture_path: relative path to the gift picture
+            point: the amount of point needed to redeem the gift
+            
+            return the button of the gift picture
+            """
+            gift_button = self.drawButton(image=pygame.image.load(picture_path).convert_alpha(),
+                                          pos=position,
+                                          text_input="",
+                                          font=self.font)
+            self.drawButton(image=pygame.image.load("assets/gift_30h.png").convert_alpha(),
+                            pos=(position[0] - 20, position[1] + 80),
+                            text_input="",
+                            font=self.font)
+            self.drawButton(image=None,
+                            pos=(position[0] + 20, position[1] + 80),
+                            text_input=str(point),
+                            font=self.font_small)
+            return gift_button
         while True:
             self.screen.fill((255, 255, 255))
             self.drawButton(image=pygame.image.load("assets/gift_30h.png"),
@@ -582,6 +608,8 @@ class Game:
                             pos=(275, 30),
                             text_input="40",
                             font=self.font_small)
+            pencil_case_button = drawGiftIconPoint((78, 132), "assets/gift/pencil_case_100h.png", 100)
+            robot_button = drawGiftIconPoint((237, 132), "assets/gift/robot_100h.png", 2000)
             game_button, pay_button, gift_button = self.drawBottomMenu()
             for event in pygame.event.get():
                 self.quit(event)
