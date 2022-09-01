@@ -12,6 +12,7 @@ class Business:
     # randomly change the current price by multiplying values between 1 - risk_percentage and 1 + risk_percentage
     # return the new current price
     def setCurrentPrice(self):
+        self.bid_price = self.current_price
         randomChange = round(
             random.uniform(1 - self.risk_percentage,
                            1 + self.risk_percentage), 2)  # 2 decimal places
