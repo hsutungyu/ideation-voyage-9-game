@@ -120,14 +120,6 @@ class Game:
                                 font=self.font))
         return button_list
 
-    def drawReport(self):
-        household_expense = dict()
-        for item in account.household_items:
-            household_expense[item.name] = item.weekly_fee
-        while True:
-            self.screen.fill((255, 255, 255))
-            pygame.display.update()
-
     def drawCurrencies(self):
         # buttons for showing the in-game currencies
         currencies = [str(account.currency[0]), str(account.currency[1])]
