@@ -47,6 +47,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.font = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 25)
+        self.font_medium = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 20)
         self.font_small = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf', 15)
         self.font_very_small = pygame.font.Font('assets/Arvo/Arvo-Regular.ttf',
                                                 10)
@@ -156,6 +157,72 @@ class Game:
         ]
         return currencies_button_list
 
+    def drawBackButton(self):
+        return self.drawButton(image=None,
+                               pos=(WIDTH // 2, 629),
+                               text_input="Back",
+                               font=self.font_small)
+
+    # draw the weekly report
+    # return the overall change of this week for use of weekly progress
+    def drawReport(self):
+        SEP = 30
+        self.drawButton(image=None,
+                        pos=(WIDTH // 2, 90),
+                        text_input="Weekly Report",
+                        font=self.font)
+        # draw the business investments details
+        self.drawButton(image=None,
+                        pos=(WIDTH // 2, 130),
+                        text_input="Business",
+                        font=self.font_medium)
+        for i, item in enumerate(account.business_investments):
+            self.drawButton(image=None,
+                            pos=(WIDTH // 2, 170 -
+                                 (len(account.business_investments) + i) +
+                                 (2 * i + 0) * SEP),
+                            text_input=item.name,
+                            font=self.font_small)
+            self.drawButton(
+                image=None,
+                pos=(WIDTH // 2,
+                     170 - (len(account.business_investments) + i) +
+                     (2 * i + 1) * SEP),
+                text_input=item.getPriceReport(),
+                font=self.font_small)
+            # store the height of the last button
+            if i == len(account.business_investments) - 1:
+                lastHeight = 170 - (len(account.business_investments) +
+                                    i) + (2 * i + 1) * SEP
+        # draw the household expenses details
+        self.drawButton(image=None,
+                        pos=(WIDTH // 2, lastHeight + 40),
+                        text_input="Household",
+                        font=self.font_medium)
+        for i, item in enumerate(account.household_items):
+            self.drawButton(image=None,
+                            pos=(WIDTH // 2, lastHeight + 80 -
+                                 (len(account.household_items) + i) +
+                                 (2 * i + 0) * SEP),
+                            text_input=item.name,
+                            font=self.font_small)
+            self.drawButton(image=None,
+                            pos=(WIDTH // 2, lastHeight + 80 -
+                                 (len(account.household_items) + i) +
+                                 (2 * i + 1) * SEP),
+                            text_input=str(item.weekly_fee),
+                            font=self.font_small)
+            # store the height of the last button
+            if i == len(account.household_items) - 1:
+                lastHeight = lastHeight + 80 - (len(account.household_items) + i) + (2 * i + 1) * SEP
+        # draw the overall change of this week
+        self.drawButton(image=None, pos=(WIDTH//2, lastHeight + 40), text_input="Overall Change", font=self.font_medium)
+        businessTotalChange = sum(item.getPriceDifference() for item in account.business_investments)
+        householdTotalCost = sum(item.weekly_fee for item in account.household_items)
+        overallChange = round(businessTotalChange - householdTotalCost)
+        self.drawButton(image=None, pos=(WIDTH//2, lastHeight + 80), text_input=str(overallChange), font=self.font_small)
+        return overallChange
+
     # the main menu game loop
     def main_menu(self):
         while True:
@@ -210,9 +277,21 @@ class Game:
                             pos=(283, 306),
                             text_input="rank",
                             font=self.font_small)
-            game.drawButton(image=None, pos=(50, 630), text_input="game", font=self.font_small, base_color=(255, 0, 0))
-            game.drawButton(image=None, pos=(156, 630), text_input="pay", font=self.font_small, base_color=(255, 0, 0))
-            game.drawButton(image=None, pos=(261, 630), text_input="gifts", font=self.font_small, base_color=(255, 0, 0))
+            game.drawButton(image=None,
+                            pos=(50, 630),
+                            text_input="game",
+                            font=self.font_small,
+                            base_color=(255, 0, 0))
+            game.drawButton(image=None,
+                            pos=(156, 630),
+                            text_input="pay",
+                            font=self.font_small,
+                            base_color=(255, 0, 0))
+            game.drawButton(image=None,
+                            pos=(261, 630),
+                            text_input="gifts",
+                            font=self.font_small,
+                            base_color=(255, 0, 0))
             for event in pygame.event.get():
                 game.quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -255,6 +334,7 @@ class Game:
             if not random_event_toggle:
                 break
             self.screen.fill((255, 255, 153))
+            self.drawCurrencies()
             self.drawButton(image=None,
                             pos=(WIDTH // 2, HEIGHT // 2),
                             text_input="Show the Details of Random Event",
@@ -274,20 +354,15 @@ class Game:
         # 3) trigger a report showing the gain and loss of this week
         while True:
             self.screen.fill((255, 255, 153))
-            # utility.blit_text(self.screen, business_list, (40, 40), self.font)
-            self.drawButton(image=None,
-                            pos=(WIDTH // 2, HEIGHT // 2),
-                            text_input="Show the Weekly Report",
-                            font=self.font_small)
-            back_button = self.drawButton(image=None,
-                                          pos=(WIDTH // 2, 629),
-                                          text_input="Back",
-                                          font=self.font_small)
+            self.drawCurrencies()
+            overallChange = self.drawReport()
+            back_button = self.drawBackButton()
             for event in pygame.event.get():
                 game.quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     pos = pygame.mouse.get_pos()
                     if back_button.checkForInput(pos):
+                        account.currency[0] += overallChange
                         game.main_menu()
             pygame.display.update()
 
@@ -334,10 +409,7 @@ class Game:
                                 pos=(220, 400),
                                 text_input="cost of PC      ",
                                 font=self.font_very_small)
-            back_button = self.drawButton(image=None,
-                                          pos=(WIDTH // 2, 629),
-                                          text_input="Back",
-                                          font=self.font_small)
+            back_button = self.drawBackButton()
             pygame.display.update()
             for event in pygame.event.get():
                 game.quit(event)
@@ -376,10 +448,7 @@ class Game:
                                 pos=(163, 180),
                                 text_input="buy 7-11?     ",
                                 font=self.font_very_small)
-            back_button = self.drawButton(image=None,
-                                          pos=(WIDTH // 2, 629),
-                                          text_input="Back",
-                                          font=self.font_small)
+            back_button = self.drawBackButton()
             pygame.display.update()
             for event in pygame.event.get():
                 game.quit(event)
@@ -394,14 +463,9 @@ class Game:
     def report(self):
         while True:
             self.screen.fill((204, 204, 255))
-            game.drawButton(image=None,
-                            pos=(155, 328),
-                            text_input="show the weekly report",
-                            font=self.font)
-            back_button = self.drawButton(image=None,
-                                          pos=(WIDTH // 2, 629),
-                                          text_input="Back",
-                                          font=self.font_small)
+            self.drawCurrencies()
+            self.drawReport()
+            back_button = self.drawBackButton()
             for event in pygame.event.get():
                 game.quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -418,10 +482,7 @@ class Game:
                             pos=(155, 328),
                             text_input="show the leaderboard",
                             font=self.font)
-            back_button = self.drawButton(image=None,
-                                          pos=(WIDTH // 2, 629),
-                                          text_input="Back",
-                                          font=self.font_small)
+            back_button = self.drawBackButton()
             for event in pygame.event.get():
                 game.quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -430,14 +491,14 @@ class Game:
                         game.main_menu()
             pygame.display.update()
 
+
 if __name__ == "__main__":
-    account = Account(500, 450)
+    account = Account(10000, 1200)
     game = Game()
     # add some business investments
     # in the finished game, this will be handled autonomously by the children
-    account.addBusiness("Convenience Store", 100, 100, 0.03)
-    account.addBusiness("Tuck Shop", 30, 30, 0.01)
-    account.addBusiness("Testing Business", 200, 200, 0.05)
+    account.addBusiness("Convenience Store", 1000, 1000, 0.05)
+    account.addBusiness("Tuck Shop", 300, 300, 0.03)
     # add some household items
     # in the finished game, this will be done by missions
     account.addHouseholdItem("Air Conditioner", 150, "assets/air_con.png")

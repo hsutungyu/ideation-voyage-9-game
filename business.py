@@ -16,12 +16,16 @@ class Business:
             random.uniform(1 - self.risk_percentage,
                            1 + self.risk_percentage), 2)  # 2 decimal places
         self.current_price *= randomChange
-        self.current_price = round(self.current_price, 2)
+        self.current_price = round(self.current_price)
         return self.current_price
 
     # return the profit/loss ofthe investment
     def getPriceDifference(self):
-        return round(self.current_price - self.bid_price, 2)
+        return round(self.current_price - self.bid_price)
+    
+    # return a string of price report
+    def getPriceReport(self):
+        return f"{self.bid_price} --> {self.current_price}"
 
     # return a space separated string of name, bid price, current price and profit/loss
     def __str__(self):
