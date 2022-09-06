@@ -260,9 +260,9 @@ class Game:
                                                                  153))
             household_button = game.drawButton(image=pygame.image.load(
                 "assets/main_background_household.jpeg"),
-                                               pos=(151, 408),
-                                               text_input="",
-                                               font=self.font_small)
+                pos=(151, 408),
+                text_input="",
+                font=self.font_small)
             game.drawButton(image=None,
                             pos=(151, 298),
                             text_input="Press to visit home",
@@ -271,9 +271,9 @@ class Game:
             business_button = game.drawButton(image=pygame.transform.flip(
                 pygame.image.load("assets/car_75h.png").convert_alpha(), True,
                 False),
-                                              pos=(85, 540),
-                                              text_input="",
-                                              font=self.font_small)
+                pos=(85, 540),
+                text_input="",
+                font=self.font_small)
             game.drawButton(image=None,
                             pos=(85, 586),
                             text_input="Visit Business Area",
@@ -281,9 +281,9 @@ class Game:
             # button for showing the weekly report of the last week
             report_button = game.drawButton(image=pygame.image.load(
                 "assets/report_icon_20h.png").convert_alpha(),
-                                            pos=(283, 246),
-                                            text_input="",
-                                            font=self.font_small)
+                pos=(283, 246),
+                text_input="",
+                font=self.font_small)
             game.drawButton(image=None,
                             pos=(283, 261),
                             text_input="report",
@@ -291,9 +291,9 @@ class Game:
             # button for showing the leaderboard of the game
             leaderboard_button = game.drawButton(image=pygame.image.load(
                 "assets/leaderboard_20h.png").convert_alpha(),
-                                                 pos=(283, 296),
-                                                 text_input="",
-                                                 font=self.font_small)
+                pos=(283, 296),
+                text_input="",
+                font=self.font_small)
             game.drawButton(image=None,
                             pos=(283, 306),
                             text_input="rank",
@@ -406,31 +406,31 @@ class Game:
             if dog_button_toogle:
                 self.drawButton(image=pygame.image.load(
                     "assets/dialog_100h.png").convert_alpha(),
-                                pos=(110, 450),
-                                text_input="keep a dog?  ",
-                                font=self.font_very_small)
+                    pos=(110, 450),
+                    text_input="keep a dog?  ",
+                    font=self.font_very_small)
             air_con_button = self.drawButton(image=pygame.image.load(
                 "assets/air_con_150h.png").convert_alpha(),
-                                             pos=(238, 222),
-                                             text_input="",
-                                             font=self.font)
+                pos=(238, 222),
+                text_input="",
+                font=self.font)
             if air_con_button_toogle:
                 self.drawButton(image=pygame.image.load(
                     "assets/dialog_100h.png").convert_alpha(),
-                                pos=(238, 170),
-                                text_input="50/week",
-                                font=self.font_very_small)
+                    pos=(238, 170),
+                    text_input="50/week",
+                    font=self.font_very_small)
             computer_button = self.drawButton(image=pygame.image.load(
                 "assets/computer_200h.png").convert_alpha(),
-                                              pos=(220, 430),
-                                              text_input="",
-                                              font=self.font)
+                pos=(220, 430),
+                text_input="",
+                font=self.font)
             if computer_button_toogle:
                 self.drawButton(image=pygame.image.load(
                     "assets/dialog_100h.png").convert_alpha(),
-                                pos=(220, 400),
-                                text_input="10/week",
-                                font=self.font_very_small)
+                    pos=(220, 400),
+                    text_input="10/week",
+                    font=self.font_very_small)
             back_button = self.drawBackButton()
             pygame.display.update()
             for event in pygame.event.get():
@@ -456,20 +456,22 @@ class Game:
             currencies_button_list = self.drawCurrencies()
             character_button = self.drawButton(image=pygame.image.load(
                 "assets/boss_baby_100h.png").convert_alpha(),
-                                               pos=(97, 502),
-                                               text_input="",
-                                               font=self.font_small)
+                pos=(97, 502),
+                text_input="",
+                font=self.font_small)
             convenience_store_button = self.drawButton(image=pygame.image.load(
                 "assets/business_background_store.jpg"),
-                                                       pos=(163, 277),
-                                                       text_input="",
-                                                       font=self.font_small)
+                pos=(163, 277),
+                text_input="",
+                font=self.font_small)
             if convenience_store_button_toggle:
                 self.drawButton(pygame.image.load(
                     "assets/dialog_100h.png").convert_alpha(),
-                                pos=(163, 180),
-                                text_input="buy 7-11?     ",
-                                font=self.font_very_small)
+                    pos=(163, 180),
+                    text_input="buy 7-11?     ",
+                    font=self.font_very_small)
+            self.drawButton(image=pygame.image.load(
+                "assets/input_joystick_1_100h.png").convert_alpha(), pos=(237, 507), text_input="", font=self.font)
             back_button = self.drawBackButton()
             pygame.display.update()
             for event in pygame.event.get():
@@ -559,7 +561,7 @@ class Game:
                             text_input="Check the Spending Details",
                             font=self.font_medium,
                             base_color=(0, 64, 255))
-            
+
             game_button, pay_button, gift_button = self.drawBottomMenu()
             for event in pygame.event.get():
                 self.quit(event)
@@ -582,7 +584,7 @@ class Game:
             with the middle of the picture at position
             picture_path: relative path to the gift picture
             point: the amount of point needed to redeem the gift
-            
+
             return the button of the gift picture
             """
             gift_button = self.drawButton(image=pygame.image.load(picture_path).convert_alpha(),
@@ -601,15 +603,17 @@ class Game:
         while True:
             self.screen.fill((255, 255, 255))
             self.drawButton(image=pygame.image.load("assets/gift_30h.png"),
-                        pos=(245, 30),
-                        text_input="",
-                        font=self.font)
+                            pos=(245, 30),
+                            text_input="",
+                            font=self.font)
             self.drawButton(image=None,
                             pos=(275, 30),
                             text_input="40",
                             font=self.font_small)
-            pencil_case_button = drawGiftIconPoint((78, 132), "assets/gift/pencil_case_100h.png", 100)
-            robot_button = drawGiftIconPoint((237, 132), "assets/gift/robot_100h.png", 2000)
+            pencil_case_button = drawGiftIconPoint(
+                (78, 132), "assets/gift/pencil_case_100h.png", 100)
+            robot_button = drawGiftIconPoint(
+                (237, 132), "assets/gift/robot_100h.png", 2000)
             game_button, pay_button, gift_button = self.drawBottomMenu()
             for event in pygame.event.get():
                 self.quit(event)
